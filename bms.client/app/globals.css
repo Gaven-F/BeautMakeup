@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* #region Basic Var */
+
+:root {
+	--grid-p: 8px;
+}
+
+:root {
+	--grid-col: var(--grid-p) 1fr var(--grid-p);
+}
+
+/* #endregion Basic Var*/
+
+html,
+body {
+	@apply h-full w-full m-0 p-0;
+}
+
+/* #region Gird Container */
+
+.grid-container {
+	@apply grid grid-cols-[--grid-col] auto-rows-min;
+}
+.grid-container > * {
+	@apply col-start-2 col-end-2;
+}
+.grid-container > .full {
+	@apply col-start-1 col-end-4;
+}
+
+/* #endregion Grid Container */
