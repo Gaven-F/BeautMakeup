@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="zh-cn">
-			<body className={font.className}>{children}</body>
+			<body className={font.className + "w-full"}>{children}</body>
 		</html>
 	);
 }

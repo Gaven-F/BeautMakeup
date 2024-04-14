@@ -1,25 +1,30 @@
 "use client";
 
 import { times } from "lodash";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay, EffectCards, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/pagination";
+import "swiper/css/effect-cards";
 
 export default function PhoneSwiper() {
 	return (
 		<Swiper
-			loop
-			autoplay={{ delay: 3000 }}
+			autoplay={{ delay: 1500 }}
 			pagination
-			className="w-full h-[33vh] bg-slate-500 bg-opacity-25 rounded my-2"
-			modules={[Autoplay, Pagination]}
+			effect="cards"
+			className="w-[80vw] h-[33vh] bg-opacity-25 rounded my-2"
+			modules={[Autoplay, Pagination, EffectCards]}
 		>
-			{times(3, (i) => (
+			{times(12, (i) => (
 				<SwiperSlide
 					key={i}
-					className="h-[30vh] !flex place-content-center place-items-center"
+					className={
+						"h-[30vh] w-20 !flex place-content-center place-items-center rounded opacity-90 backdrop-blur-3xl " +
+						"[&:nth-child(1n)]:bg-red-50 [&:nth-child(2n)]:bg-green-100 [&:nth-child(3n)]:bg-yellow-200 " +
+						"[&:nth-child(4n)]:bg-blue-300 [&:nth-child(5n)]:bg-sky-400 [&:nth-child(6n)]:bg-violet-500 "
+					}
 				>
-					<div>图片{i + 1}</div>
+					<div className="">图片{i + 1}</div>
 				</SwiperSlide>
 			))}
 		</Swiper>

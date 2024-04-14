@@ -11,8 +11,8 @@ export default function PhoneLayout({
 	footer,
 }: PhoneLayoutProps) {
 	return (
-		<div className="flex flex-col h-full">
-			<div className="h-0 basis-full bg-primary-100 bg-opacity-25 grid-container">
+		<div className="flex flex-col w-full h-full">
+			<div className="h-0 w-full basis-full bg-primary-100 bg-opacity-25 grid-container overflow-auto overflow-x-hidden">
 				{header}
 				{children}
 			</div>
