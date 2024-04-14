@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Noto_Serif_SC } from "next/font/google";
+import { ZCOOL_KuaiLe } from "next/font/google";
+import "swiper/css";
 import "./globals.css";
 
-const font = Noto_Serif_SC({ weight: "400", subsets: ["latin"] });
+const font = ZCOOL_KuaiLe({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "Beaut Makeup Shop",
