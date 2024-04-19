@@ -12,7 +12,7 @@ export default function PhoneSwiper() {
 			autoplay={{ delay: 1500 }}
 			pagination
 			effect="cards"
-			className="w-[80vw] h-[33vh] bg-opacity-25 rounded my-2"
+			className="!w-full h-[33vh] bg-opacity-25 rounded my-2 [&>*]:!w-full [&_*]:!flex-grow-0"
 			modules={[Autoplay, Pagination, EffectCards]}
 		>
 			{times(12, (i) => (

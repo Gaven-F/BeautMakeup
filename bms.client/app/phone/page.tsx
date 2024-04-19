@@ -1,4 +1,4 @@
-import PhoneSwiper from "@/ui/pageComponents/phone/swiper";
+import PhoneSwiper from "./@ui/swiper";
 import { times } from "lodash";
 import Merchandise from "./@ui/merchandise";
 
