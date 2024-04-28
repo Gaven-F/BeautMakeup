@@ -49,13 +49,13 @@ app
 	.UseSwaggerUi()
 	.UseReDoc(config => config.Path = "/redoc");
 
-app.UseAuthorizeR401();
-
 app
 	.UseAuthentication()
 	.UseAuthorization()
 	.UseCookiePolicy()
 	.UseCors();
+
+app.UseAuthorizeR401();
 
 app.MapControllers();
 #endregion
