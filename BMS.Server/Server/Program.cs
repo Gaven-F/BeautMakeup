@@ -1,27 +1,20 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.OData;
-using Microsoft.OData.ModelBuilder;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Authentication
 builder.Services
-	.AddAuthentication(options =>
-	{
-		options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-	})
+	.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options => builder.Configuration.Bind("CookieOptions", options));
 
 builder.Services.AddControllers(options =>
 {
+	// Global api add authorization attribute
 	var policy = new AuthorizationPolicyBuilder()
 					 .RequireAuthenticatedUser()
 					 .Build();
-
 	options.Filters.Add(new AuthorizeFilter(policy));
 });
 
@@ -38,20 +31,6 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
-#region OData
-var modelBuilder = new ODataConventionModelBuilder();
-modelBuilder.EntitySet<Customer>("Customer");
-modelBuilder.EntitySet<TestModel>("Test");
-
-builder.Services
-	.AddControllers()
-	.AddJsonOptions(options => options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase)
-	.AddOData(options =>
-	{
-		options.EnableQueryFeatures().AddRouteComponents("oData", modelBuilder.GetEdmModel());
-	});
-#endregion
-
 #region OpenApi
 builder.Services
 	.AddOpenApiDocument(confi =>
@@ -64,24 +43,18 @@ builder.Services
 var app = builder.Build();
 
 #region Config Middleware
+app.UseAuthorizationR403();
 
 app
 	.UseOpenApi()
 	.UseSwaggerUi()
 	.UseReDoc(config => config.Path = "/redoc");
 
-app.UseMiddleware<CustomAuthorizationMiddleware>();
-
 app
 	.UseAuthentication()
 	.UseAuthorization()
 	.UseCookiePolicy()
 	.UseCors();
-
-app
-	.UseODataQueryRequest()
-	.UseODataBatching()
-	.UseODataRouteDebug();
 
 app.MapControllers();
 #endregion
