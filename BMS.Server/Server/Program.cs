@@ -4,13 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
-using Server.Controllers;
-using Server.MiddleWares;
-using Server.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<Demo>();
 #region Authentication
 builder.Services
 	.AddAuthentication(options =>
@@ -73,6 +70,8 @@ app
 	.UseSwaggerUi()
 	.UseReDoc(config => config.Path = "/redoc");
 
+app.UseMiddleware<CustomAuthorizationMiddleware>();
+
 app
 	.UseAuthentication()
 	.UseAuthorization()
@@ -84,7 +83,6 @@ app
 	.UseODataBatching()
 	.UseODataRouteDebug();
 
-app.UseMiddleware<CustomAuthorizationMiddleware>();
 app.MapControllers();
 #endregion
 
