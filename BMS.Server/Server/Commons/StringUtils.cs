@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Server.Commons;
 
@@ -93,11 +93,6 @@ public static partial class StringUtils
 	/// 非开头大写字母寻找正则表达式
 	/// </summary>
 	/// <returns></returns>
-	/// <remarks>
-	/// (?<!^)是一个零宽负向回溯断言，表示在匹配的位置之前不应该出现匹配项。
-	/// ^ 表示字符串的开头，因此 (?<!^) 表示在字符串的开头之前不应该出现匹配项
-	/// ?<! 表示负向回溯断言，表示在当前位置之前不应该出现匹配项
-	/// </remarks>
 	[GeneratedRegex(@"(?<!^)([A-Z])")]
 	private static partial Regex UpperCaseSnakeCaseRegex();
 }

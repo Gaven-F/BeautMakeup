@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Server.Cores;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-	.AddScoped<DbService>();
+builder.Services.AddScoped<DbService>();
 
 #region Authentication
-builder.Services
+builder
+	.Services
 	.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>
 	{
@@ -24,12 +23,9 @@ builder.Services
 builder.Services.AddControllers(options =>
 {
 	// Global api add authorization attribute
-	var policy = new AuthorizationPolicyBuilder()
-					 .RequireAuthenticatedUser()
-					 .Build();
+	var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 	options.Filters.Add(new AuthorizeFilter(policy));
 });
-
 
 #endregion
 
@@ -45,28 +41,20 @@ builder.Services.AddCors(options =>
 #endregion
 
 #region OpenApi
-builder.Services
-	.AddOpenApiDocument(confi =>
-	{
-		confi.DocumentName = "default";
-		confi.PostProcess = doc => doc.Info.Title = "BMS API";
-	});
+builder.Services.AddOpenApiDocument(confi =>
+{
+	confi.DocumentName = "default";
+	confi.PostProcess = doc => doc.Info.Title = "BMS API";
+});
 #endregion
 
 var app = builder.Build();
 
 #region Config Middleware
 
-app
-	.UseOpenApi()
-	.UseSwaggerUi()
-	.UseReDoc(config => config.Path = "/redoc");
+app.UseOpenApi().UseSwaggerUi().UseReDoc(config => config.Path = "/redoc");
 
-app
-	.UseAuthentication()
-	.UseAuthorization()
-	.UseCookiePolicy()
-	.UseCors();
+app.UseAuthentication().UseAuthorization().UseCookiePolicy().UseCors();
 
 app.MapControllers();
 #endregion

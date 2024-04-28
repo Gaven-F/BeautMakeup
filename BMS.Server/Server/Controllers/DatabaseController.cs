@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using NSwag.Annotations;
-using Server.Cores;
 using Server.Interface;
 
 namespace Server.Controllers;
@@ -9,7 +8,10 @@ namespace Server.Controllers;
 [OpenApiTag("数据库控制器", Description = "db | database | 数据库")]
 public class DatabaseController(DbService dbService) : BasicController
 {
-	public ISqlSugarClient Db { get => dbService.Instance; }
+	public ISqlSugarClient Db
+	{
+		get => dbService.Instance;
+	}
 
 	/// <summary>
 	/// 初始化数据库
@@ -20,7 +22,9 @@ public class DatabaseController(DbService dbService) : BasicController
 	{
 		Type[] tables;
 
-		tables = AppDomain.CurrentDomain.GetAssemblies()
+		tables = AppDomain
+			.CurrentDomain
+			.GetAssemblies()
 			.SelectMany(assembly => assembly.GetTypes())
 			.Where(t => t.GetInterfaces().Contains(typeof(IDbTable)))
 			.ToArray();
@@ -29,7 +33,8 @@ public class DatabaseController(DbService dbService) : BasicController
 
 		if (dropSourceData)
 		{
-			var dropTableNames = Db.DbMaintenance
+			var dropTableNames = Db
+				.DbMaintenance
 				.GetTableInfoList()
 				.Select(table => table.Name)
 				.ToArray();
@@ -39,6 +44,4 @@ public class DatabaseController(DbService dbService) : BasicController
 		Db.CodeFirst.InitTables(tables);
 		return Ok();
 	}
-
-
 }

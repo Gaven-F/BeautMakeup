@@ -2,5 +2,5 @@
 
 public class ConstData
 {
-	public const string ARG_NULL = "参数为空";
+    public const string ARG_NULL = "参数为空";
 }
