@@ -12,7 +12,12 @@ public class UserController : ApiController
 	{
 		if (key == "GavenF")
 		{
-			var claims = new List<Claim> { new(CT.Name, "GavenF"), new(CT.Role, "GavenF"), new(CT.Role, "Admin ") };
+			var claims = new List<Claim>
+			{
+				new(CT.Name, "GavenF"),
+				new(CT.Role, "DatabaseAdmin"),
+				new(CT.Role, "Admin ")
+			};
 
 			var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 			var authenticationProperties = new AuthenticationProperties { };
@@ -29,11 +34,5 @@ public class UserController : ApiController
 	}
 
 	[Authorize(Roles = "GavenF")]
-	public ActionResult AdminApi()
-	{
-		return new OkResult();
-	}
-
-
-
+	public ActionResult AdminApi() => new OkResult();
 }

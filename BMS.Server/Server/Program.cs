@@ -1,13 +1,25 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Server.Cores;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+	.AddScoped<DbService>();
 
 #region Authentication
 builder.Services
 	.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-	.AddCookie(options => builder.Configuration.Bind("CookieOptions", options));
+	.AddCookie(options =>
+	{
+		builder.Configuration.Bind("CookieOptions", options);
+		options.Events = new()
+		{
+			OnRedirectToAccessDenied = Expansions.OnRedirectToAccessDenied,
+			OnRedirectToLogin = Expansions.OnRedirectToLogin,
+		};
+	});
 
 builder.Services.AddControllers(options =>
 {
@@ -17,6 +29,7 @@ builder.Services.AddControllers(options =>
 					 .Build();
 	options.Filters.Add(new AuthorizeFilter(policy));
 });
+
 
 #endregion
 
@@ -54,8 +67,6 @@ app
 	.UseAuthorization()
 	.UseCookiePolicy()
 	.UseCors();
-
-app.UseAuthorizeR401();
 
 app.MapControllers();
 #endregion
