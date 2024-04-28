@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace Server.Controllers;
@@ -22,8 +23,17 @@ public class UserController : ApiController
 				new ClaimsPrincipal(claimIdentity),
 				authenticationProperties);
 
-			return Ok();
+			return base.Ok(new { Data = User.FindAllValue(CT.Role) });
 		}
 		return StatusCode(StatusCodes.Status401Unauthorized);
 	}
+
+	[Authorize(Roles = "GavenF")]
+	public ActionResult AdminApi()
+	{
+		return new OkResult();
+	}
+
+
+
 }

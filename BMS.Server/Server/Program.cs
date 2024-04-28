@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +10,10 @@ builder.Services
 builder.Services.AddControllers(options =>
 {
 	// Global api add authorization attribute
-	var policy = new AuthorizationPolicyBuilder()
-					 .RequireAuthenticatedUser()
-					 .Build();
-	options.Filters.Add(new AuthorizeFilter(policy));
+	//var policy = new AuthorizationPolicyBuilder()
+	//				 .RequireAuthenticatedUser()
+	//				 .Build();
+	//options.Filters.Add(new AuthorizeFilter(policy));
 });
 
 #endregion

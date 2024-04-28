@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Server.Commons;
+﻿namespace Server.Commons;
 
 [Route("[controller]/[action]")]
 public abstract class ApiController : ControllerBase

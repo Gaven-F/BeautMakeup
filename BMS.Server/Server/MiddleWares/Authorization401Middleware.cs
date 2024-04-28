@@ -1,4 +1,5 @@
 ﻿using Masuit.Tools.Mime;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Server.MiddleWares;
 
@@ -8,16 +9,48 @@ public class Authorization401Middleware(RequestDelegate next)
 	{
 		var metadata = context.GetEndpoint()?.Metadata;
 		// 未通过授权
-		if (metadata == null ||
-			!metadata.Any(x => x.GetType() == typeof(AllowAnyone)) &&
-			(context.User?.Identity == null || !context.User.Identity.IsAuthenticated))
-		{
-			await R403(context);
-		}
-		// 授权通过，继续处理请求
-		else await next(context);
+		var user = context.User;
 
-		static async Task R403(HttpContext context)
+		if (metadata == null)
+		{
+			await R401(context);
+			return;
+		}
+
+		if (metadata.Any(x => x.GetType() == typeof(AllowAnyone)))
+		{
+			await next(context);
+			return;
+		}
+
+		var authorize = metadata.GetMetadata<AuthorizeAttribute>()!;
+		if (user != null)
+		{
+			if (authorize.Roles == null)
+			{
+				if (user.Identity != null && user.Identity.IsAuthenticated)
+				{
+					await next(context);
+					return;
+				}
+
+				await R401(context);
+				return;
+
+			}
+
+			if (authorize.Roles.Split(",").Intersect(user.FindAllValue(CT.Role)).Any())
+			{
+				await next(context);
+				return;
+			}
+		}
+
+		await R401(context);
+		return;
+
+
+		static async Task R401(HttpContext context)
 		{
 			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 			context.Response.ContentType = MimeMapper.MimeTypes[".json"];
