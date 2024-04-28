@@ -10,6 +10,16 @@ public class DbService
 
 		confServices.Bind("DbConf", conf);
 
+		conf.ConfigureExternalServices = new()
+		{
+			EntityNameService = (type, entity) =>
+			{
+				entity.DbTableName = StringUtils.ToSnakeCase(type.Name);
+			},
+
+		};
+
+
 		Instance = new SqlSugarClient(conf, (db) =>
 		{
 		});

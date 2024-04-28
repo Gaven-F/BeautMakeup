@@ -30,4 +30,9 @@ public static class Expansions
 		await context.Response.WriteAsync(new { Msg = "未登录！" }.ToJsonString());
 	}
 	#endregion
+
+	#region SqlSugar Expansions
+	public static ISugarQueryable<T> ExcludeDelete<T>(this ISugarQueryable<T> queryable, bool excludeDelete = true) where T : BasicEntityTable, new() =>
+		 queryable.WhereIF(excludeDelete, it => !it.IsDelete);
+	#endregion
 }
