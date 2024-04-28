@@ -2,14 +2,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
+StaticConfig.CodeFirst_MySqlCollate = "utf8mb4_bin";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<DbService>();
 
 #region Authentication
 builder
-	.Services
-	.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+	.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>
 	{
 		builder.Configuration.Bind("CookieOptions", options);

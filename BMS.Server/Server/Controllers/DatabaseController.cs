@@ -17,31 +17,29 @@ public class DatabaseController(DbService dbService) : BasicController
 	/// 初始化数据库
 	/// </summary>
 	/// <returns></returns>
-	[ProducesResponseType(typeof(void), 200)]
-	public ActionResult Init(bool dropSourceData = false)
+	[ProducesResponseType(typeof(R), 200)]
+	public IActionResult Init(bool dropSourceData = false)
 	{
 		Type[] tables;
 
 		tables = AppDomain
-			.CurrentDomain
-			.GetAssemblies()
+			.CurrentDomain.GetAssemblies()
 			.SelectMany(assembly => assembly.GetTypes())
 			.Where(t => t.GetInterfaces().Contains(typeof(IDbTable)))
 			.ToArray();
 
-		Db.DbMaintenance.CreateDatabase();
+		Db.DbMaintenance.CreateDatabase("bms");
 
 		if (dropSourceData)
 		{
 			var dropTableNames = Db
-				.DbMaintenance
-				.GetTableInfoList()
+				.DbMaintenance.GetTableInfoList(false)
 				.Select(table => table.Name)
 				.ToArray();
 			Db.DbMaintenance.DropTable(dropTableNames);
 		}
 
 		Db.CodeFirst.InitTables(tables);
-		return Ok();
+		return R.Success();
 	}
 }

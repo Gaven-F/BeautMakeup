@@ -6,5 +6,5 @@ global using Server.Models;
 global using Server.Models.Dto;
 global using SqlSugar;
 global using AllowAnyone = Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute;
-global using CONST_DATA = Server.Commons.ConstData;
 global using CT = System.Security.Claims.ClaimTypes;
+global using NewJsonIgnore = Newtonsoft.Json.JsonIgnoreAttribute;
