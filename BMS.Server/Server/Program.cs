@@ -43,12 +43,13 @@ builder.Services
 var app = builder.Build();
 
 #region Config Middleware
-app.UseAuthorizationR403();
 
 app
 	.UseOpenApi()
 	.UseSwaggerUi()
 	.UseReDoc(config => config.Path = "/redoc");
+
+app.UseAuthorizationR401();
 
 app
 	.UseAuthentication()

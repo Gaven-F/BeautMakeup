@@ -2,7 +2,7 @@
 
 namespace Server.MiddleWares;
 
-public class Authorization403Middleware(RequestDelegate next)
+public class Authorization401Middleware(RequestDelegate next)
 {
 	public async Task InvokeAsync(HttpContext context)
 	{
@@ -19,7 +19,7 @@ public class Authorization403Middleware(RequestDelegate next)
 
 		static async Task R403(HttpContext context)
 		{
-			context.Response.StatusCode = StatusCodes.Status403Forbidden;
+			context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 			context.Response.ContentType = MimeMapper.MimeTypes[".json"];
 			await context.Response.WriteAsync(new { Msg = "授权失败！" }.ToJsonString());
 		}
