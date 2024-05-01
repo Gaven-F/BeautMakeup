@@ -14,7 +14,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./BMS.Server
     steps:
     - uses: actions/checkout@v4
       with:
@@ -25,10 +28,10 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: ./BMS.Server
+
     - name: Build
       run: dotnet build --no-restore
-      working-directory: ./BMS.Server
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
-      working-directory: ./BMS.Server
+    
