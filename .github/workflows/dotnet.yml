@@ -24,7 +24,9 @@ jobs:
     - name: Checkout folder
       run: ls
     - name: Switch folder
-      run: cd BMS.Server
+      run: cd ./BMS.Server
+    - name: Checkout folder
+      run: ls
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
