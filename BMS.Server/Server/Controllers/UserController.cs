@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Mapster;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NSwag.Annotations;
@@ -93,20 +94,14 @@ public class UserController(DbService dbService) : BasicController
 	[AllowAnyone, HttpPost]
 	public async Task<IActionResult> Register([FromBody] UserDto user)
 	{
-		var has = await Db.Queryable<User>().Where(it => it.Uid == user.Uid).AnyAsync();
-
-		if (has)
-			return BadRequest(R.UidExist());
-
-		var data = new User()
+		var u = await Db.Queryable<User>().FirstAsync(it => it.Uid == user.Uid);
+		if (u != null)
 		{
-			Uid = user.Uid,
-			Pwd = user.Pwd,
-			Name = user.Name
-		};
-
-		await Db.Insertable(data).ExecuteCommandAsync();
-
+			return R.UidExist();
+		}
+		var data = user.Adapt<User>();
+		data.Roles = [new("User")];
+		data = await Db.InsertNav(data).Include(it => it.Roles).ExecuteReturnEntityAsync();
 		return R.Created(data);
 	}
 
