@@ -21,6 +21,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Checkout folder
+      run: ls
     - name: Switch folder
       run: cd BMS.Server
     - name: Restore dependencies
