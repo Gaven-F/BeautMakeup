@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 
 StaticConfig.CodeFirst_MySqlCollate = "utf8mb4_bin";
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<DbService>();
+#region DI
+builder.Services.AddScoped<DbService>().AddSingleton<OSService>();
+#endregion
 
 #region Authentication
 builder
@@ -59,8 +62,5 @@ app.UseAuthentication().UseAuthorization().UseCookiePolicy().UseCors();
 
 app.MapControllers();
 #endregion
-Console.WriteLine(RC.SUCCESS);
-
-RC failure = RC.FAILURE;
 
 app.Run();

@@ -56,8 +56,7 @@ public class UserController(DbService dbService) : BasicController
 		}
 
 		var data = Db.Queryable<User>()
-			.ExcludeDelete()
-			.Includes(it => it.Roles)
+			.Includes(it => it.Roles.Where(r => !r.IsDelete).ToList())
 			.First(it => it.Uid.Equals(user.Uid) && it.Pwd.Equals(user.Pwd));
 
 		if (data is null)
@@ -94,10 +93,7 @@ public class UserController(DbService dbService) : BasicController
 	[AllowAnyone, HttpPost]
 	public async Task<IActionResult> Register([FromBody] UserDto user)
 	{
-		var has = await Db.Queryable<User>()
-			.ExcludeDelete()
-			.Where(it => it.Uid == user.Uid)
-			.AnyAsync();
+		var has = await Db.Queryable<User>().Where(it => it.Uid == user.Uid).AnyAsync();
 
 		if (has)
 			return BadRequest(R.UidExist());
@@ -121,40 +117,46 @@ public class UserController(DbService dbService) : BasicController
 	)
 	{
 		// 检查用户是否存在
-		var user = await Db.Queryable<User>().InSingleAsync(userId);
+		var user = await Db.Queryable<User>().Includes(it => it.Roles).InSingleAsync(userId);
 
 		if (user == null)
+		{
 			return R.UidErr();
+		}
 
-		// 获取已经存在的角色
-		var dbRoleData = await Db.Queryable<Role>()
-			.ExcludeDelete()
+		var srcRoles = Db.Queryable<Role>()
+			.GroupBy(it => it.RoleVal)
 			.Where(it => roles.Contains(it.RoleVal))
-			.ToListAsync();
+			.Select(it => new { Id = SqlFunc.AggregateMax(it.Id) })
+			.InnerJoin<Role>((g, r) => g.Id == r.Id)
+			.Select((g, r) => r)
+			.ToList();
 
-		var dbRoleVal = dbRoleData.Select(it => it.RoleVal);
+		// 添加缺失的角色
+		srcRoles
+			.Where(r => !user.Roles.Any(it => it.RoleVal == r.RoleVal))
+			.ToList()
+			.ForEach(r => user.Roles.Add(r));
 
-		// 存储不存在的角色
-		var data = roles.Except(dbRoleVal).Select(it => new Role { RoleVal = it }).ToList();
+		// 移除多余的角色
+		user.Roles.Where(r => !srcRoles.Any(it => it.RoleVal == r.RoleVal))
+			.ToList()
+			.ForEach(r => user.Roles.Remove(r));
 
-		await Db.Insertable(data).ExecuteCommandAsync();
+		user.UpdateTime = DateTime.Now;
 
-		// 获取所有需要绑定的角色
-		data.AddRange(dbRoleData);
-
-		// 删除用户原有角色
-		await Db.Updateable<UserAndRole>()
-			.Where(it => it.UserId == userId && !it.IsDelete)
-			.SetColumns(it => new UserAndRole { IsDelete = true, UpdateTime = DateTime.Now })
+		await Db.UpdateNav(user)
+			.Include(
+				it => it.Roles,
+				new UpdateNavOptions
+				{
+					ManyToManyEnableLogicDelete = true,
+					ManyToManyIsUpdateA = true,
+					ManyToManyIsUpdateB = true,
+				}
+			)
 			.ExecuteCommandAsync();
 
-		// 更新用户角色
-		var userAndRoles = data
-			.Select(it => new UserAndRole { UserId = userId, RoleId = it.Id })
-			.ToArray();
-
-		await Db.Insertable(userAndRoles).ExecuteCommandAsync();
-
-		return R.Created(new { Role = data, Mapper = userAndRoles });
+		return R.Created(user);
 	}
 }
