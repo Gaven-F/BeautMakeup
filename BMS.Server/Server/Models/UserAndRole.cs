@@ -29,7 +29,14 @@ public class User : BasicEntityTable, IDbTable
 
 public class Role : BasicEntityTable, IDbTable
 {
-	public string RoleVal { get; set; } = string.Empty;
+	public string RoleVal { get; set; }
+
+	public Role(string role)
+	{
+		RoleVal = role;
+	}
+
+	public Role() { }
 
 	[JsonIgnore, NewJsonIgnore]
 	[Navigate(typeof(UserAndRole), nameof(UserAndRole.RoleId), nameof(UserAndRole.UserId))]
