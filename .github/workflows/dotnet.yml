@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: List files in the working directory
+      run: ls
     - uses: actions/checkout@v4
       with:
         path: BMS.Server
-    - name: List files in the working directory
-      run: cd ./BMS.Server
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
