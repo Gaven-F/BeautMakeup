@@ -16,15 +16,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: List files in the working directory
-      run: ls
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Show Path
-      run: pwd
+    - name: Switch folder
+      run: cd BMS.Server
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
