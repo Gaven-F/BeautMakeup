@@ -32,7 +32,10 @@ public class DbService
 					//获取无参数化SQL 对性能有影响，特别大的SQL参数多的，调试使用
 					//Console.WriteLine(UtilMethods.GetSqlString(DbType.SqlServer,sql,pars))
 				};
-			}
-		);
+			});
+	}
+
+	public class Repository<T>(DbService db) : SimpleClient<T>(db.Instance) where T : class, IDbTable, new()
+	{
 	}
 }

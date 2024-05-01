@@ -13,6 +13,7 @@ public class DatabaseController(DbService dbService, OSService osSearvce) : Basi
 		get => dbService.Instance;
 	}
 
+
 	/// <summary>
 	/// 初始化数据库
 	/// </summary>

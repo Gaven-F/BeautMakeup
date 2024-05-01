@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 
 StaticConfig.CodeFirst_MySqlCollate = "utf8mb4_bin";
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region DI
-builder.Services.AddScoped<DbService>().AddSingleton<OSService>();
+builder
+	.Services.AddScoped<DbService>()
+	.AddScoped(typeof(DbService.Repository<>))
+	.AddSingleton<OSService>();
 #endregion
 
 #region Authentication
