@@ -18,12 +18,12 @@ jobs:
     - uses: actions/checkout@v4
       with:
         path: BMS.Server
+    - name: List files in the working directory
+      run: ls
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: check path
-      run: ls
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
