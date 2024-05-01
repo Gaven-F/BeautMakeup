@@ -10,22 +10,22 @@ builder.Services.AddScoped<DbService>();
 
 #region Authentication
 builder
-    .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        builder.Configuration.Bind("CookieOptions", options);
-        options.Events = new()
-        {
-            OnRedirectToAccessDenied = Expansions.OnRedirectToAccessDenied,
-            OnRedirectToLogin = Expansions.OnRedirectToLogin,
-        };
-    });
+	.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+	.AddCookie(options =>
+	{
+		builder.Configuration.Bind("CookieOptions", options);
+		options.Events = new()
+		{
+			OnRedirectToAccessDenied = Expansions.OnRedirectToAccessDenied,
+			OnRedirectToLogin = Expansions.OnRedirectToLogin,
+		};
+	});
 
 builder.Services.AddControllers(options =>
 {
-    // Global api add authorization attribute
-    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
+	// Global api add authorization attribute
+	var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+	options.Filters.Add(new AuthorizeFilter(policy));
 });
 
 #endregion
@@ -33,19 +33,19 @@ builder.Services.AddControllers(options =>
 #region Cors
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-        policy.SetIsOriginAllowed(origin => true);
-    });
+	options.AddDefaultPolicy(policy =>
+	{
+		policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+		policy.SetIsOriginAllowed(origin => true);
+	});
 });
 #endregion
 
 #region OpenApi
 builder.Services.AddOpenApiDocument(confi =>
 {
-    confi.DocumentName = "default";
-    confi.PostProcess = doc => doc.Info.Title = "BMS API";
+	confi.DocumentName = "default";
+	confi.PostProcess = doc => doc.Info.Title = "BMS API";
 });
 #endregion
 
@@ -62,15 +62,5 @@ app.MapControllers();
 Console.WriteLine(RC.SUCCESS);
 
 RC failure = RC.FAILURE;
-
-// ����Ϳ��Ը�����Ҫ�����м����
-if (failure != null)
-{
-    Console.WriteLine("FAILURE �����Ѿ�������");
-}
-else
-{
-    Console.WriteLine("FAILURE ���Ի�δ������");
-}
 
 app.Run();
