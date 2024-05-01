@@ -20,8 +20,7 @@ jobs:
         working-directory: ./BMS.Server
     steps:
     - uses: actions/checkout@v4
-      with:
-        path: BMS.Server
+    - run: ls
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
