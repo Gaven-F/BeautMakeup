@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
-
+// @ts-ignore
+import antdColor from "/assets/antd-color.json";
 const config: Config = {
 	content: [
 		"./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -35,6 +36,7 @@ const config: Config = {
 					800: "#1565C0",
 					900: "#0D47A1",
 				},
+				...antdColor,
 			},
 		},
 	},
