@@ -1,7 +1,7 @@
-﻿using System.Security.Claims;
-using Masuit.Tools.Mime;
+﻿using Masuit.Tools.Mime;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace Server.Commons;
 

@@ -1,8 +1,8 @@
-﻿using System.Security.Claims;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NSwag.Annotations;
+using System.Security.Claims;
 
 namespace Server.Controllers;
 
@@ -15,7 +15,7 @@ public class UserController(DbService dbService) : BasicController
 	}
 
 	[AllowAnyone, HttpGet]
-	public async Task<IActionResult> Demo(string key)
+	public async Task<IActionResult> Admin(string key)
 	{
 		if (key == DateTime.Now.Day.ToString())
 		{
@@ -57,8 +57,8 @@ public class UserController(DbService dbService) : BasicController
 		}
 
 		var data = Db.Queryable<User>()
-			.Includes(it => it.Roles.Where(r => !r.IsDelete).ToList())
-			.First(it => it.Uid.Equals(user.Uid) && it.Pwd.Equals(user.Pwd));
+			.Includes(it => it.Roles)
+			.First(it => it.Uid == user.Uid && it.Pwd == user.Pwd);
 
 		if (data is null)
 		{
@@ -66,7 +66,7 @@ public class UserController(DbService dbService) : BasicController
 		}
 
 		var claims = new List<Claim> { new(CT.Name, data.Name) };
-		var roleClaims = data.Roles?.Select(it => new Claim(CT.Role, it.RoleVal)) ?? [];
+		var roleClaims = data.Roles.Select(it => new Claim(CT.Role, it.RoleVal)) ?? [];
 
 		claims.AddRange(roleClaims);
 

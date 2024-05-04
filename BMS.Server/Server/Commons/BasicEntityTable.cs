@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using Masuit.Tools.Systems;
+﻿using Masuit.Tools.Systems;
+using System.Text.Json.Serialization;
 
 namespace Server.Commons;
 
