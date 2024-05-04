@@ -32,3 +32,7 @@ body {
 }
 
 /* #endregion Grid Container */
+
+button.active {
+	@apply bg-slate-500 text-white !important;
+}

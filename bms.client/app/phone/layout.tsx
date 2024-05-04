@@ -1,4 +1,6 @@
+"use client";
 
+import { usePathname } from "next/navigation";
 
 // Code: PhoneLayout
 type PhoneLayoutProps = {
@@ -12,10 +14,11 @@ export default function PhoneLayout({
 	header,
 	footer,
 }: PhoneLayoutProps) {
+	const path = usePathname();
 	return (
 		<div className="flex flex-col w-full h-full">
-			<div className="h-0 w-full basis-full bg-primary-100 bg-opacity-25 grid-container overflow-auto overflow-x-hidden">
-				{header}
+			<div className="h-0 w-full flex-1 grid-container overflow-y-auto bg-sky-50">
+				{path.endsWith("phone") && header}
 				{children}
 			</div>
 			<div className="h-16">{footer}</div>
